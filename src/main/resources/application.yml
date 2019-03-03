@@ -1,0 +1,36 @@
+spring.cloud.stream.kafka.streams:
+  binder:
+    brokers: kafka:9092
+    configuration:
+      application.id: demoApp
+      default.key.serde: org.apache.kafka.common.serialization.Serdes$LongSerde
+      default.value.serde: org.springframework.kafka.support.serializer.JsonSerde
+      default.timestamp.extractor: org.apache.kafka.streams.processor.WallclockTimestampExtractor
+      commit.interval.ms: 1000
+      key.serde: org.apache.kafka.common.serialization.Serdes$LongSerde
+      value.serde: org.springframework.kafka.support.serializer.JsonSerde
+      spring.json.trusted.packages: "*"
+  bindings:
+    demoDataTable:
+      consumer:
+        keySerde: org.apache.kafka.common.serialization.Serdes$LongSerde
+        valueSerde: com.github.timklug.demo_01.data.DemoDataSerde
+
+spring.cloud.stream.bindings:
+  demoData:
+    destination: Demo-Data
+    contentType: application/json
+    group: demoData
+    consumer:
+      headerMode: raw
+  demoDataTable:
+    destination: Demo-Data-Table
+    group: demoData
+    consumer:
+      useNativeDecoding: true
+#      headerMode: embeddedHeaders
+  demoResult:
+    destination: Demo-Result
+    contentType: application/json
+    producer:
+      headerMode: raw

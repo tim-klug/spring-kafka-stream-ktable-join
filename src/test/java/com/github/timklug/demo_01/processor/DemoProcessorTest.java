@@ -59,7 +59,7 @@ public class DemoProcessorTest {
     Map<String, Object> senderPropsTable = KafkaTestUtils.producerProps(embeddedKafka);
     senderPropsTable.put("key.serializer", LongSerializer.class);
     senderPropsTable.put("value.serializer", JsonSerializer.class);
-    var pf2 = new DefaultKafkaProducerFactory<Long, DemoData>(senderPropsTable, new LongSerializer(), new JsonSerializer<DemoData>());
+    var pf2 = new DefaultKafkaProducerFactory<Long, DemoData>(senderPropsTable, new LongSerializer(), new DemoDataSerde().serializer());
     var template2 = new KafkaTemplate<>(pf2, true);
     template2.setDefaultTopic(TOPIC_DEMO_DATA_TABLE);
     template2.sendDefault(0L, demoData);

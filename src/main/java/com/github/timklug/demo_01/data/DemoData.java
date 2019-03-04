@@ -1,11 +1,12 @@
 package com.github.timklug.demo_01.data;
 
+import javax.money.MonetaryAmount;
 import org.javamoney.moneta.Money;
 
 public class DemoData {
 
   private String demo;
-  private Money amount;
+  private MonetaryAmount amount;
 
   public String getDemo() {
     return demo;
@@ -15,11 +16,11 @@ public class DemoData {
     this.demo = demo;
   }
 
-  public Money getAmount() {
+  public MonetaryAmount getAmount() {
     return amount;
   }
 
-  public void setAmount(Money amount) {
+  public void setAmount(MonetaryAmount amount) {
     this.amount = amount;
   }
 }

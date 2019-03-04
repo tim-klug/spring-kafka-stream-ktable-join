@@ -15,6 +15,12 @@ spring.cloud.stream.kafka.streams:
       consumer:
         keySerde: org.apache.kafka.common.serialization.Serdes$LongSerde
         valueSerde: com.github.timklug.demo_01.data.DemoDataSerde
+        materializedAs: demoDataTable
+        useNativeDecoding: true
+    demoResult:
+      producer:
+        keySerde: org.apache.kafka.common.serialization.Serdes$LongSerde
+        valueSerde: com.github.timklug.demo_01.data.DemoDataSerde
 
 spring.cloud.stream.bindings:
   demoData:
@@ -25,14 +31,12 @@ spring.cloud.stream.bindings:
       headerMode: raw
   demoDataTable:
     destination: Demo-Data-Table
-#    contentType: application/json
     group: demoData
     consumer:
       useNativeDecoding: true
-#      headerMode: embeddedHeaders
-#      headerMode: raw
   demoResult:
     destination: Demo-Result
-    contentType: application/json
+#    contentType: application/json
     producer:
-      headerMode: raw
+      useNativeEncoding: true
+#      headerMode: raw

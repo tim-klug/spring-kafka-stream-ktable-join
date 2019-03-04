@@ -6,13 +6,17 @@ import com.github.timklug.demo_01.data.DemoData;
 import com.github.timklug.demo_01.data.DemoDataSerde;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Currency;
 import java.util.Map;
+import javax.money.CurrencyUnit;
+import javax.money.Monetary;
 import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.LongDeserializer;
 import org.apache.kafka.common.serialization.LongSerializer;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
+import org.javamoney.moneta.Money;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
@@ -50,6 +54,7 @@ public class DemoProcessorTest {
 
     var demoData = new DemoData();
     demoData.setDemo("some Name");
+    demoData.setAmount(Money.of(10, Monetary.getCurrency("EUR")));
 
     Map<String, Object> senderPropsTable = KafkaTestUtils.producerProps(embeddedKafka);
     senderPropsTable.put("key.serializer", LongSerializer.class);

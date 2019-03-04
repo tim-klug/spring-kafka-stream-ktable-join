@@ -8,6 +8,6 @@ import org.zalando.jackson.datatype.money.MoneyModule;
 public class DemoDataSerde extends JsonSerde<DemoData> {
 
   public DemoDataSerde() {
-    super(new ObjectMapper().registerModule(new MoneyModule()).setSerializationInclusion(Include.NON_NULL));
+    super(new ObjectMapper().registerModule(new MoneyModule()));
   }
 }

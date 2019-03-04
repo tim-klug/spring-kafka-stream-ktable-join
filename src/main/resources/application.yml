@@ -16,7 +16,6 @@ spring.cloud.stream.kafka.streams:
         keySerde: org.apache.kafka.common.serialization.Serdes$LongSerde
         valueSerde: com.github.timklug.demo_01.data.DemoDataSerde
         materializedAs: demoDataTable
-        useNativeDecoding: true
     demoResult:
       producer:
         keySerde: org.apache.kafka.common.serialization.Serdes$LongSerde

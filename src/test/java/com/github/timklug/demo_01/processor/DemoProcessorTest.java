@@ -3,12 +3,15 @@ package com.github.timklug.demo_01.processor;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.github.timklug.demo_01.data.DemoData;
+import com.github.timklug.demo_01.data.DemoDataSerde;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
+import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.LongDeserializer;
 import org.apache.kafka.common.serialization.LongSerializer;
+import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
@@ -34,7 +37,7 @@ public class DemoProcessorTest {
   private static final String GROUP_NAME = "demo";
 
   @ClassRule
-  public static KafkaEmbedded embeddedKafka = new KafkaEmbedded(1, true, TOPIC_DEMO_RESULT, TOPIC_DEMO_DATA_TABLE, TOPIC_DEMO_DATA);
+  public static KafkaEmbedded embeddedKafka = new KafkaEmbedded(1, true, TOPIC_DEMO_RESULT);
 
   @BeforeClass
   public static void setup() {
@@ -42,15 +45,8 @@ public class DemoProcessorTest {
   }
 
   @Test
-  public void test() throws InterruptedException {
+  public void test() throws Exception {
 
-    Map<String, Object> senderProps = KafkaTestUtils.producerProps(embeddedKafka);
-    senderProps.put("key.serializer", LongSerializer.class);
-    senderProps.put("value.serializer", StringSerializer.class);
-    var pf = new DefaultKafkaProducerFactory<Long, String>(senderProps);
-    var template = new KafkaTemplate<>(pf, true);
-    template.setDefaultTopic(TOPIC_DEMO_DATA);
-    template.sendDefault(0L, "Test");
 
     var demoData = new DemoData();
     demoData.setDemo("some Name");
@@ -65,12 +61,19 @@ public class DemoProcessorTest {
 
     Thread.sleep(2_000);
 
+    Map<String, Object> senderProps = KafkaTestUtils.producerProps(embeddedKafka);
+    senderProps.put("key.serializer", LongSerializer.class);
+    senderProps.put("value.serializer", JsonSerializer.class);
+    var pf = new DefaultKafkaProducerFactory<Long, String>(senderProps, new LongSerializer(), new JsonSerializer<String>());
+    var template = new KafkaTemplate<>(pf, true);
+    template.setDefaultTopic(TOPIC_DEMO_DATA);
+    template.sendDefault(0L, "Test");
 
     Map<String, Object> consumerProps = KafkaTestUtils.consumerProps(GROUP_NAME, "false", embeddedKafka);
     consumerProps.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
     consumerProps.put("key.deserializer", LongDeserializer.class);
     consumerProps.put("value.deserializer", JsonDeserializer.class);
-    var cf = new DefaultKafkaConsumerFactory<Long, DemoData>(consumerProps, new LongDeserializer(), new JsonDeserializer<DemoData>());
+    var cf = new DefaultKafkaConsumerFactory<Long, DemoData>(consumerProps, new LongDeserializer(), new DemoDataSerde().deserializer());
 
     var consumer = cf.createConsumer();
     embeddedKafka.consumeFromAnEmbeddedTopic(consumer, TOPIC_DEMO_RESULT);

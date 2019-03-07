@@ -19,7 +19,7 @@ public class DemoProcessor {
   @StreamListener
   @SendTo({DEMO_RESULT})
   public KStream<Long, DemoData> process(
-      @Input(DEMO_DATA) KStream<Long, String> data,
+      @Input(DEMO_DATA) KStream<Long, Integer> data,
       @Input(DEMO_DATA_TABLE) KTable<Long, DemoData> dataTable
   ) {
     return data
@@ -30,7 +30,7 @@ public class DemoProcessor {
   public interface DemoKStreamProcessor {
 
     @Input(DEMO_DATA)
-    KStream<Long, String> data();
+    KStream<Long, Integer> data();
 
     @Input(DEMO_DATA_TABLE)
     KTable<Long, DemoData> dataTable();

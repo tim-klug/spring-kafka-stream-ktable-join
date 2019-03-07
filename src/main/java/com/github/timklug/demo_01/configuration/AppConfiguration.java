@@ -8,8 +8,8 @@ import org.zalando.jackson.datatype.money.MoneyModule;
 @Configuration
 public class AppConfiguration {
 
-//  @Bean
-//  public Module moneyModule() {
-//    return new MoneyModule();
-//  }
+  @Bean
+  public Module moneyModule() {
+    return new MoneyModule();
+  }
 }

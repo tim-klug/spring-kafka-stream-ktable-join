@@ -7,19 +7,13 @@ spring.cloud.stream.kafka.streams:
       default.value.serde: org.springframework.kafka.support.serializer.JsonSerde
       default.timestamp.extractor: org.apache.kafka.streams.processor.WallclockTimestampExtractor
       commit.interval.ms: 1000
-      key.serde: org.apache.kafka.common.serialization.Serdes$LongSerde
-      value.serde: org.springframework.kafka.support.serializer.JsonSerde
-      spring.json.trusted.packages: "*"
+  #      spring.json.trusted.packages: "*"
   bindings:
     demoDataTable:
       consumer:
         keySerde: org.apache.kafka.common.serialization.Serdes$LongSerde
         valueSerde: com.github.timklug.demo_01.data.DemoDataSerde
-        materializedAs: demoDataTable
-    demoResult:
-      producer:
-        keySerde: org.apache.kafka.common.serialization.Serdes$LongSerde
-        valueSerde: com.github.timklug.demo_01.data.DemoDataSerde
+        materializedAs: demoDataTableIn
 
 spring.cloud.stream.bindings:
   demoData:
@@ -35,7 +29,6 @@ spring.cloud.stream.bindings:
       useNativeDecoding: true
   demoResult:
     destination: Demo-Result
-#    contentType: application/json
+    contentType: application/json
     producer:
-      useNativeEncoding: true
-#      headerMode: raw
+      headerMode: raw
